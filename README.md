@@ -22,6 +22,73 @@ Or install it yourself as:
 
 ## Usage
 
+Create your class and inherite appropriate golden object directly or thought another class.
+
+```
+class ApplicationPresenter < Golden::ApplicationPresenter
+  include Rails.application.routes.url_helpers
+end
+
+class CartPresenter < ApplicationPresenter
+  attr_accessor :product_variants
+
+  def line_items_presenter
+    @line_items_presenter ||= CartLineItemPresenter.all(product_variants: product_variants)
+  end
+end
+```
+
+And put into suggested pathes.
+
+* business logic classes => app/components
+* data model logic classes => app/objects
+
+Grouping classes by multi layers of folders are also suggested.
+
+```
+app/components/[major business logic]/[secondary business logic]/xxx_xxx.rb
+app/objects/[major data model logic]/[secondary data model logic]/xxx_xxx.rb
+```
+
+For example:
+
+```
+app/components/identity/profile/update_form.rb
+app/components/frontend/popup_cart/main_presenter.rb
+app/objects/orders/line_item/create_operator.rb
+app/objects/orders/create_operator.rb
+```
+
+## Modules
+
+3 kinds of modules are provied.
+
+* attribute accessors
+* active model concerns
+* active record concerns
+
+## Objects
+
+3 groups of objects are provied.
+
+* Application objects
+  * Golden::ApplicationCalculator
+  * Golden::ApplicationContext
+  * Golden::ApplicationForm
+  * Golden::ApplicationGenerator
+  * Golden::ApplicationOperator
+  * Golden::ApplicationPresenter
+  * Golden::ApplicationService
+  * Golden::ApplicationTransformer
+* Form objects
+  * Golden::ActionFormOperator
+  * Golden::ActiveRecordForm
+  * Golden::SingleFormPresenter
+* Query objects
+  * Golden::QueryContext
+  * Golden::QueryForm
+  * Golden::QueryFormOperator
+  * Golden::QueryResultPresenter
 
 ## Development
 
