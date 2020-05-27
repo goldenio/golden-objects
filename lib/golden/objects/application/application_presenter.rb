@@ -4,6 +4,7 @@ require 'golden/attribute_accessors'
 
 module Golden
   class ApplicationPresenter
+    extend ActiveModel::Naming
     extend ActiveModel::Translation
     include ActiveModel::AttributeAssignment
 
