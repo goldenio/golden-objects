@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ## Usage
 
-Create your class and inherite appropriate golden object directly or thought another class.
+Create your class and inherite appropriate golden object directly or though another class.
 
 ```
 class ApplicationPresenter < Golden::ApplicationPresenter
@@ -61,15 +61,16 @@ app/objects/orders/create_operator.rb
 
 ## Modules
 
-3 kinds of modules are provied.
+4 kinds of modules are provided.
 
 * attribute accessors
 * active model concerns
 * active record concerns
+* action view extensions
 
 ## Objects
 
-3 groups of objects are provied.
+3 groups of objects are provided.
 
 * Application objects
   * Golden::ApplicationCalculator
@@ -89,6 +90,17 @@ app/objects/orders/create_operator.rb
   * Golden::QueryForm
   * Golden::QueryFormOperator
   * Golden::QueryResultPresenter
+
+## Action View
+
+require extension for actionview in controller of rails.
+
+```
+require 'golden/action_view/extension'
+
+class ApplicationController < ActionController::Base
+  helper ::Golden::FormHelper
+```
 
 ## Development
 
