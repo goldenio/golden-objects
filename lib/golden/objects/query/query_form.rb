@@ -17,6 +17,7 @@ module Golden
 
     attr_reader :result
     attr_accessor :per, :page, :sort
+    attr_accessor :mode
 
     def initialize(params, accessors = {})
       @query_params = find_query_from(params)
@@ -25,6 +26,7 @@ module Golden
       @per ||= params.dig(:per)
       @page ||= params.dig(:page)
       @sort ||= params.dig(:sort)
+      @mode ||= :paginated
     end
 
     def save
@@ -48,6 +50,7 @@ module Golden
 
     def query_accessors
       attrs = attributes.clone
+      attrs.delete(:mode)
       attrs.each { |accessor, value| attrs.delete(accessor) if value.blank? }
       attrs
     end

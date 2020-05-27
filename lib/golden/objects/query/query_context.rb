@@ -12,13 +12,18 @@ module Golden
     attr_accessor :page, :per
     attr_accessor :sort_field, :sort_direction
 
+    boolean_accessor :plucking
+    attr_reader :pluck_fields
+
     def initialize(accessors = {})
       assign_attributes(accessors || {})
       @page ||= 1
       @per ||= 100
     end
 
-    def perform(mode = :paginated)
+    def perform(mode = :paginated, pluck: nil)
+      @plucking = pluck.present?
+      @pluck_fields = pluck
       send("find_#{mode}")
     end
 
@@ -47,7 +52,8 @@ module Golden
     def find_all
       return [] if invalid?
 
-      relations.where(query_scopes).order(sort).all
+      finder = relations.where(query_scopes).order(sort).all
+      find_or_pluck(finder)
     end
 
     def find_count
@@ -59,13 +65,30 @@ module Golden
     def find_paginated
       return paginated_blank_result if invalid?
 
-      relations.where(query_scopes).order(sort).page(page).per(per)
+      finder = relations.where(query_scopes).order(sort).page(page).per(per)
+      find_or_pluck(finder)
     end
 
     def paginated_blank_result
       return Kaminari.paginate_array([], total_count: 0).page(1) if ::Object.const_defined? 'Kaminari'
 
       raise NotImplementedError
+    end
+
+    def find_or_pluck(finder)
+      return finder unless plucking?
+
+      finder.pluck(safe_table_fields(pluck_fields) || Arel.star)
+    end
+
+    def safe_table_fields(table_and_fields)
+      table_fields = table_and_fields.flat_map do |table, fields|
+        table_name = send(table)&.name
+        next if table_name.blank?
+
+        fields.map { |field| [table_name, field.to_s].join('.') }
+      end.compact
+      Arel.sql(table_fields.join(', '))
     end
 
     def relations
@@ -86,7 +109,9 @@ module Golden
           def #{__method__}
             @sort_field ||= :id
             @sort_direction ||= :desc
-            @#{__method__} ||= Record.arel_table[@sort_field].send(@sort_direction)
+            @#{__method__} ||= [
+              Record.arel_table[@sort_field].send(@sort_direction)
+            ]
           end
         ```
       ERROR
@@ -97,6 +122,7 @@ module Golden
         Please define #{__method__} like
         ```
           def #{__method__}
+            @scopes = nil
             concat_xxx_scope
             @scopes
           end
@@ -105,10 +131,14 @@ module Golden
         ```
           def concat_xxx_scope
             scope = Record.arel_table[:xxx_number].eq(@xxx_number)
-            @scopes = @scopes ? @scopes.and(scope) : scope
+            scopes_and(scope)
           end
         ```
       ERROR
+    end
+
+    def scopes_and(scope)
+      @scopes = @scopes ? @scopes.and(scope) : scope
     end
   end
 end
