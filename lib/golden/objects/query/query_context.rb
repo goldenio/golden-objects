@@ -9,6 +9,8 @@ module Golden
       end
     end
 
+    include ::ActiveRecord::Sanitization::ClassMethods
+
     attr_accessor :page, :per
     attr_accessor :sort_field, :sort_direction
 
@@ -109,8 +111,16 @@ module Golden
           def #{__method__}
             @sort_field ||= :id
             @sort_direction ||= :desc
-            @#{__method__} ||= [
-              Record.arel_table[@sort_field].send(@sort_direction)
+            @#{__method__} = send("sort_by_\#{@sort_field}")
+          rescue NoMethodError
+            @#{__method__} = sort_by_id
+          end
+        ```
+        And define sort_by_xxx like
+        ```
+          def sort_by_id
+            [
+              Record.arel_table[sort_field].send(sort_direction)
             ]
           end
         ```

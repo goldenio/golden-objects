@@ -56,7 +56,16 @@ module Golden
     end
 
     def query!
-      raise NotImplementedError
+      raise NotImplementedError, <<~ERROR
+        Please define #{__method__} like
+        ```
+          def #{__method__}
+            context = ::Orders::QueryContext.new query_accessors
+            @result = context.perform(mode)
+            errors.merge! context.errors
+          end
+        ```
+      ERROR
     end
   end
 end
