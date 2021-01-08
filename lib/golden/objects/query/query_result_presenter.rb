@@ -6,7 +6,7 @@ module Golden
       def collect(result, presenter_class)
         new(
           records: paginated_array(result),
-          presenter_class: presenter_class
+          presenter_class: presenter_class.to_s
         )
       end
 

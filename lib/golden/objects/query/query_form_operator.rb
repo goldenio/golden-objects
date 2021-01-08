@@ -56,7 +56,7 @@ module Golden
     end
 
     def result_presenter
-      @result_presenter ||= result_presenter_class.collect query_result, record_presenter_class
+      @result_presenter ||= result_presenter_class.collect query_result, record_presenter_class.name
     end
 
     private
