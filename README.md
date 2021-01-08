@@ -8,32 +8,49 @@ Let's compose business logics as ruby components to improve efficiency of mainte
 
 Add this line to your application's Gemfile:
 
-```ruby
+``` ruby
 gem 'golden-objects'
 ```
 
 And then execute:
 
-    $ bundle install
+``` shell
+bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install golden-objects
+``` shell
+gem install golden-objects
+```
 
 ## Usage
 
 Create your class and inherite appropriate golden object directly or though another class.
 
-```
+``` ruby
 class ApplicationPresenter < Golden::ApplicationPresenter
   include Rails.application.routes.url_helpers
+end
+
+class CartLineItemPresenter < ApplicationPresenter
+  class << self
+    def collect(records)
+      ::Golden::QueryResultPresenter.collect(records, name)
+    end
+  end
+
+  def initialize(line_item, accessors = {})
+    super(accessors)
+    @line_item = line_item
+  end
 end
 
 class CartPresenter < ApplicationPresenter
   attr_accessor :product_variants
 
   def line_items_presenter
-    @line_items_presenter ||= CartLineItemPresenter.all(product_variants: product_variants)
+    @line_items_presenter ||= CartLineItemPresenter.collect(product_variants)
   end
 end
 ```
@@ -45,14 +62,14 @@ And put into suggested pathes.
 
 Grouping classes by multi layers of folders are also suggested.
 
-```
+``` shell
 app/components/[major business logic]/[secondary business logic]/xxx_xxx.rb
 app/objects/[major data model logic]/[secondary data model logic]/xxx_xxx.rb
 ```
 
 For example:
 
-```
+``` shell
 app/components/identity/profile/update_form.rb
 app/components/frontend/popup_cart/main_presenter.rb
 app/objects/orders/line_item/create_operator.rb
@@ -95,11 +112,12 @@ app/objects/orders/create_operator.rb
 
 require extension for actionview in controller of rails.
 
-```
+``` ruby
 require 'golden/action_view/extension'
 
 class ApplicationController < ActionController::Base
   helper ::Golden::FormHelper
+end
 ```
 
 ## Development
@@ -110,4 +128,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/goldenio/golden-objects.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/goldenio/golden-objects>.

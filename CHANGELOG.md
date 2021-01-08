@@ -1,6 +1,10 @@
 # Change Logs
 
-### v0.3.0
+## v0.3.1
+
+* The argement `presenter_class` of `Golden::QueryResultPresenter.collect` should be string instead of class.
+
+## v0.3.0
 
 * `Golden::QueryResultPresenter`:
   * BREAKING: Change `initialize` definition.
@@ -15,11 +19,11 @@
   * Include `ActiveRecord::Sanitization::ClassMethods`.
   * Change prefered `sort` implementation.
 
-### v0.2.0
+## v0.2.0
 
 * Add golden form builder and helper
 * Golden query context support pluck
 
-### v0.1.0
+## v0.1.0
 
 * Initial release.
