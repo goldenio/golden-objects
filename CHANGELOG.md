@@ -1,5 +1,9 @@
 # Change Logs
 
+## v0.3.2
+
+* Add `Golden::QueryRecordPresenter` and `Golden::QueryFormPresenter` as basic presenters.
+
 ## v0.3.1
 
 * The argement `presenter_class` of `Golden::QueryResultPresenter.collect` should be string instead of class.
@@ -21,8 +25,8 @@
 
 ## v0.2.0
 
-* Add golden form builder and helper
-* Golden query context support pluck
+* Add golden form builder and helper.
+* Golden query context support pluck.
 
 ## v0.1.0
 
