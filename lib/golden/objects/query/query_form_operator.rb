@@ -26,7 +26,7 @@ module Golden
         define_method :record_presenter_class do
           return record_presenter.to_s.constantize if record_presenter.present?
 
-          "#{self.class.parent.name}::RecordPresenter".constantize
+          "#{self.class.parent.name}::QueryRecordPresenter".constantize
         end
       end
       # rubocop:enable Naming/PredicateName
