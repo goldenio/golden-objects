@@ -35,8 +35,8 @@ module Golden
       records.total_count
     end
 
-    def total_page
-      records.total_page
+    def total_pages
+      records.total_pages
     end
 
     def current_page
@@ -45,6 +45,26 @@ module Golden
 
     def per_page
       records.limit_value
+    end
+
+    def next_page
+      records.next_page
+    end
+
+    def prev_page
+      records.prev_page
+    end
+
+    def first_page?
+      records.first_page?
+    end
+
+    def last_page?
+      records.last_page?
+    end
+
+    def out_of_range?
+      records.out_of_range?
     end
   end
 end
