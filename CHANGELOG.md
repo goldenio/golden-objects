@@ -1,5 +1,10 @@
 # Change Logs
 
+# v0.3.3
+
+* fix typo of `total_pages`.
+* Add more methods for pagination.
+
 ## v0.3.2
 
 * Add `Golden::QueryRecordPresenter` and `Golden::QueryFormPresenter` as basic presenters.
